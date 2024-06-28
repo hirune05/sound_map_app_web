@@ -5,7 +5,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sound_map_app/models/place/place_list.dart';
 import 'package:sound_map_app/thems/constants.dart';
 import 'package:sound_map_app/thems/them_text.dart';
-import 'package:sound_map_app/view/top/add/place_detail/place_detail.dart';
 import 'package:sound_map_app/view/top/add/place_list_page/place_list_page_model.dart';
 import 'package:sound_map_app/view/top/add/place_add/add_place_page.dart';
 import 'package:provider/provider.dart';
