@@ -26,24 +26,30 @@ import 'package:sound_map_app/models/place/place_model.dart';
 });*/
 
 final placeModelProvider =
-    StateNotifierProvider<PlaceModelNotifier, List<PlaceModel>>((ref) {
-  return PlaceModelNotifier([]);
+    StateNotifierProvider<PlaceModelNotifier, AsyncValue<List<PlaceModel>>>(
+        (ref) {
+  return PlaceModelNotifier()..getPlaces();
 });
 
-class PlaceModelNotifier extends StateNotifier<List<PlaceModel>> {
-  PlaceModelNotifier(List<PlaceModel> state) : super(state);
-  void getPlaces() {
-    FirebaseFirestore.instance.collection('places').get().then((querySnapshot) {
+class PlaceModelNotifier extends StateNotifier<AsyncValue<List<PlaceModel>>> {
+  PlaceModelNotifier() : super(const AsyncValue.loading());
+
+  Future<void> getPlaces() async {
+    try {
+      final querySnapshot =
+          await FirebaseFirestore.instance.collection('places').get();
       final places = querySnapshot.docs.map((doc) {
         final data = doc.data();
         return PlaceModel(
-          lat: data['lat'],
-          long: data['long'],
+          lat: (data['lat'] as num?)?.toDouble(),
+          long: (data['long'] as num?)?.toDouble(),
         );
       }).toList();
 
-      state = places;
-    });
+      state = AsyncValue.data(places);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
   }
 }
 

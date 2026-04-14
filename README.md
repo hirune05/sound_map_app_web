@@ -1,8 +1,10 @@
 ## 実行方法
-web/index.htmlの29行目のAPI_KEYのところにあなたのAPI_KEYを入力してください。
-以下のコードを実行します。
+Google Maps APIキーは`.env`で管理します（Gitに載せません）。
+1. `.env.example` をコピーして `.env` を作成
+2. `.env` の `YOURAPIKEY` にAPIキーを入れる
+3. 起動
 ```
-flutter run -d chrome --web-renderer html
+flutter run -d chrome
 ```
 
 アプリが起動するのでログインまたは新規登録してください。

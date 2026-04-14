@@ -4,6 +4,6 @@ part 'env.g.dart';
 
 @Envied(path: '.env')
 abstract class Env {
-  @EnviedField(varName: 'KEY', obfuscate: true)
-  static String key = _Env.key;
+  @EnviedField(varName: 'YOURAPIKEY', obfuscate: true)
+  static String mapsApiKey = _Env.mapsApiKey;
 }

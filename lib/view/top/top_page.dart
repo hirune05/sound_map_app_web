@@ -3,19 +3,68 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sound_map_app/models/place/place_model.dart';
 import 'package:sound_map_app/provider/markers/markers_provider.dart';
 import 'package:sound_map_app/provider/place_model/place_model_provider.dart';
-import 'package:sound_map_app/service/will_pop_call_back.dart';
 
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
 import 'package:sound_map_app/view/top/add/place_list_page/place_list_page.dart';
 
-class TopPage extends ConsumerWidget {
-  Completer<GoogleMapController> _controller = Completer();
+class TopPage extends ConsumerStatefulWidget {
+  @override
+  ConsumerState<TopPage> createState() => _TopPageState();
+}
+
+class _TopPageState extends ConsumerState<TopPage> {
+  final Completer<GoogleMapController> _controller = Completer();
+  late final Future<Position> _positionFuture;
+  ProviderSubscription<AsyncValue<List<PlaceModel>>>? _placesSubscription;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+    _positionFuture = _getCurrentPosition();
+    _placesSubscription = ref.listenManual<AsyncValue<List<PlaceModel>>>(
+      placeModelProvider,
+      (previous, next) {
+        next.whenData((places) {
+          ref.read(markersProvider.notifier).addMarkers(context, places);
+        });
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _placesSubscription?.close();
+    super.dispose();
+  }
+
+  Future<Position> _getCurrentPosition() async {
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      throw 'Location services are disabled.';
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.denied) {
+      throw 'Location permissions are denied.';
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      throw 'Location permissions are permanently denied.';
+    }
+
+    return Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -24,22 +73,13 @@ class TopPage extends ConsumerWidget {
         ),
       ),
       body: FutureBuilder<Position>(
-        future: Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
-        ),
+        future: _positionFuture,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final position = snapshot.data!;
             final initialPosition =
                 LatLng(position.latitude, position.longitude);
-            ref.watch(placeModelProvider.notifier).getPlaces();
-            final places = ref.watch(placeModelProvider);
-            if (places == null) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            ref.watch(markersProvider.notifier).addMarkers(context, places);
+            final placesAsync = ref.watch(placeModelProvider);
             return SafeArea(
               child: Stack(
                 fit: StackFit.expand,
@@ -71,7 +111,24 @@ class TopPage extends ConsumerWidget {
                     },
                     markers: Set.from(ref.watch(markersProvider)),
                   ),
+                  placesAsync.when(
+                    loading: () => Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    error: (error, stackTrace) => Center(
+                      child: Text(
+                        error.toString(),
+                      ),
+                    ),
+                    data: (_) => SizedBox.shrink(),
+                  ),
                 ],
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                snapshot.error.toString(),
               ),
             );
           } else {

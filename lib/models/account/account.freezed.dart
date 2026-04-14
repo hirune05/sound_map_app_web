@@ -14,10 +14,15 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
+Account _$AccountFromJson(Map<String, dynamic> json) {
+  return _Account.fromJson(json);
+}
+
 /// @nodoc
 mixin _$Account {
   String get name => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $AccountCopyWith<Account> get copyWith => throw _privateConstructorUsedError;
 }
@@ -91,6 +96,9 @@ class __$$_AccountCopyWithImpl<$Res>
 class _$_Account implements _Account {
   const _$_Account({this.name = ''});
 
+  factory _$_Account.fromJson(Map<String, dynamic> json) =>
+      _$$_AccountFromJson(json);
+
   @override
   @JsonKey()
   final String name;
@@ -108,6 +116,7 @@ class _$_Account implements _Account {
             (identical(other.name, name) || other.name == name));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, name);
 
@@ -116,10 +125,19 @@ class _$_Account implements _Account {
   @pragma('vm:prefer-inline')
   _$$_AccountCopyWith<_$_Account> get copyWith =>
       __$$_AccountCopyWithImpl<_$_Account>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_AccountToJson(
+      this,
+    );
+  }
 }
 
 abstract class _Account implements Account {
   const factory _Account({final String name}) = _$_Account;
+
+  factory _Account.fromJson(Map<String, dynamic> json) = _$_Account.fromJson;
 
   @override
   String get name;

@@ -14,24 +14,32 @@ class MarkersNotifier extends StateNotifier<List<Marker>> {
   MarkersNotifier(List<Marker> state) : super(state);
 
   Future<void> addMarkers(BuildContext context, List<PlaceModel> places) async {
-    final newMarkers = places.map((place) {
-      return Marker(
-        markerId: MarkerId('${place.lat}-${place.long}'),
-        position: LatLng(place.lat!, place.long!),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ShopListPage(
-                lat: place.lat!,
-                long: place.long!,
-                shoptitle: 'どこか',
+    final newMarkers = <Marker>[];
+    for (final place in places) {
+      final lat = place.lat;
+      final long = place.long;
+      if (lat == null || long == null) {
+        continue;
+      }
+      newMarkers.add(
+        Marker(
+          markerId: MarkerId('$lat-$long'),
+          position: LatLng(lat, long),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ShopListPage(
+                  lat: lat,
+                  long: long,
+                  shoptitle: 'どこか',
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       );
-    }).toList();
+    }
 
     state = newMarkers;
   }

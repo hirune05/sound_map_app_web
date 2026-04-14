@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sound_map_app/thems/styles.dart';
 import 'package:sound_map_app/thems/them_text.dart';
 import 'package:sound_map_app/view/top/add/place_add/add_place_model.dart';
@@ -121,7 +120,7 @@ class _AddShopPage extends State<AddShopPage> {
                             ),
                           ),
                           onChanged: (text) {
-                            if (text != null)
+                            if (text.isNotEmpty)
                               setState(() {
                                 isfilled = true;
                               });

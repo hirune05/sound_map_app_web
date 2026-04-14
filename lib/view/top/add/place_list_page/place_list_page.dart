@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sound_map_app/models/place/place_list.dart';
 import 'package:sound_map_app/thems/constants.dart';
 import 'package:sound_map_app/thems/them_text.dart';
@@ -19,7 +16,6 @@ class ShopListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    bool pin = false;
     double shortestSide = size.shortestSide;
     return ChangeNotifierProvider<ShopListModel>(
       create: (_) => ShopListModel()..fetchShopList(),
@@ -38,8 +34,19 @@ class ShopListPage extends StatelessWidget {
               return CircularProgressIndicator();
             }
 
-            final filteredShops = shops.where((shop) => (lat == shop.lat));
-            if (filteredShops == null) pin = true;
+            const double coordinateTolerance = 0.00001;
+            final filteredShops = shops
+                .where(
+                  (shop) =>
+                      (shop.lat - lat).abs() <= coordinateTolerance &&
+                      (shop.long - long).abs() <= coordinateTolerance,
+                )
+                .toList();
+            if (filteredShops.isEmpty) {
+              return Center(
+                child: Text('No seats yet.'),
+              );
+            }
 
             final List<Widget> widgets = filteredShops
                 .map((shop) => buildListItem(
@@ -60,6 +67,14 @@ class ShopListPage extends StatelessWidget {
         ),
         floatingActionButton:
             Consumer<ShopListModel>(builder: (context, model, child) {
+          const double coordinateTolerance = 0.00001;
+          final shops = model.shops;
+          final bool hasExistingPin = shops != null &&
+              shops.any(
+                (shop) =>
+                    (shop.lat - lat).abs() <= coordinateTolerance &&
+                    (shop.long - long).abs() <= coordinateTolerance,
+              );
           return FloatingActionButton(
             onPressed: () async {
               // 画面遷移
@@ -69,7 +84,7 @@ class ShopListPage extends StatelessWidget {
                   builder: (context) => AddShopPage(
                     lat: lat,
                     long: long,
-                    pin: pin,
+                    pin: hasExistingPin,
                   ),
                   fullscreenDialog: true,
                 ),
@@ -104,41 +119,47 @@ class ShopListPage extends StatelessWidget {
     String timezone,
     String seatforme,
   ) {
-    final Image image = Image.network(imgURL!);
-    return Consumer(builder: (context, ref, _) {
-      return GestureDetector(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: appShadow,
-          ),
-          child: Column(
-            children: [
+    return GestureDetector(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: appShadow,
+        ),
+        child: Column(
+          children: [
+            if (imgURL != null)
               Image.network(
                 imgURL,
                 width: shortestSide / 2,
+              )
+            else
+              Container(
+                width: shortestSide / 2,
+                height: shortestSide / 2,
+                alignment: Alignment.center,
+                color: Colors.grey.shade200,
+                child: Icon(Icons.image_not_supported),
               ),
-              SizedBox(
-                height: 12,
-              ),
-              buildSeatDetail("Purpose", situation),
-              buildSeatDetail("Time of visit", timezone),
-              buildSeatDetail("Location", title),
-              buildSeatDetail("Seating", seatforme),
-              buildSoundDetail("Electronic sounds", electronic),
-              buildSoundDetail("Fan noise", ventilationFan),
-              buildSoundDetail("Chewing sound", masticatory),
-              SizedBox(
-                height: 12,
-              ),
-            ],
-          ),
+            SizedBox(
+              height: 12,
+            ),
+            buildSeatDetail("Purpose", situation),
+            buildSeatDetail("Time of visit", timezone),
+            buildSeatDetail("Location", title),
+            buildSeatDetail("Seating", seatforme),
+            buildSoundDetail("Electronic sounds", electronic),
+            buildSoundDetail("Fan noise", ventilationFan),
+            buildSoundDetail("Chewing sound", masticatory),
+            SizedBox(
+              height: 12,
+            ),
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 
   Widget buildSoundDetail(String shoJyoNm, int react) {
