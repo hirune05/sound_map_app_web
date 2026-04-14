@@ -167,20 +167,19 @@ class _AddShopPage extends State<AddShopPage> {
                         SizedBox(
                           height: 16,
                         ),
-                        Container(
+                        SizedBox(
                           width: shortestSide / 2,
                           height: shortestSide / 5,
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey,
-                                offset: Offset(1.0, 1.0),
-                                blurRadius: 0.8,
-                                spreadRadius: 0.8,
-                              ),
-                            ],
-                          ),
                           child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 2,
+                              backgroundColor: Styles.primaryColor,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    shortestSide / 10),
+                              ),
+                            ),
                             onPressed: () async {
                               // 追加の処理
                               if (pin == false) {
@@ -244,17 +243,21 @@ class _AddShopPage extends State<AddShopPage> {
 
   Widget buildevaluation(
       double shortestSide, String sound, int soundData, int index) {
-    double iconSize = shortestSide / 10;
-    return Container(
-      width: shortestSide,
-      child: Column(
+    return LayoutBuilder(builder: (context, constraints) {
+      final double maxWidth = constraints.maxWidth;
+      final double rawSize = (maxWidth - 16) / 5;
+      final double iconSize = rawSize.clamp(28.0, 44.0);
+      final EdgeInsets iconPadding = EdgeInsets.all(iconSize / 4);
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           BlackText(sound, 24),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
-                padding: EdgeInsets.all(iconSize / 2),
+                padding: iconPadding,
+                constraints: const BoxConstraints(),
                 icon: Icon(
                   Icons.sentiment_very_satisfied,
                   color: _rating[index] == 0 ? Colors.green : Colors.grey,
@@ -267,7 +270,8 @@ class _AddShopPage extends State<AddShopPage> {
                 },
               ),
               IconButton(
-                  padding: EdgeInsets.all(iconSize / 2),
+                  padding: iconPadding,
+                  constraints: const BoxConstraints(),
                   icon: Icon(
                     Icons.sentiment_satisfied,
                     color:
@@ -280,7 +284,8 @@ class _AddShopPage extends State<AddShopPage> {
                     });
                   }),
               IconButton(
-                  padding: EdgeInsets.all(iconSize / 2),
+                  padding: iconPadding,
+                  constraints: const BoxConstraints(),
                   icon: Icon(
                     Icons.sentiment_neutral,
                     color: _rating[index] == 2 ? Colors.amber : Colors.grey,
@@ -292,7 +297,8 @@ class _AddShopPage extends State<AddShopPage> {
                     });
                   }),
               IconButton(
-                  padding: EdgeInsets.all(iconSize / 2),
+                  padding: iconPadding,
+                  constraints: const BoxConstraints(),
                   icon: Icon(
                     Icons.sentiment_dissatisfied,
                     color: _rating[index] == 3 ? Colors.redAccent : Colors.grey,
@@ -304,7 +310,8 @@ class _AddShopPage extends State<AddShopPage> {
                     });
                   }),
               IconButton(
-                  padding: EdgeInsets.all(iconSize / 2),
+                  padding: iconPadding,
+                  constraints: const BoxConstraints(),
                   icon: Icon(
                     Icons.sentiment_very_dissatisfied,
                     color: _rating[index] == 4 ? Colors.red : Colors.grey,
@@ -321,8 +328,8 @@ class _AddShopPage extends State<AddShopPage> {
             height: iconSize,
           )
         ],
-      ),
-    );
+      );
+    });
   }
 
   Widget buildsituation(double shortestSide) {

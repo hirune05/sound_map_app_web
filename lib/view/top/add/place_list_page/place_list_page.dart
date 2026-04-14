@@ -134,6 +134,15 @@ class ShopListPage extends StatelessWidget {
               Image.network(
                 imgURL,
                 width: shortestSide / 2,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: shortestSide / 2,
+                    height: shortestSide / 2,
+                    alignment: Alignment.center,
+                    color: Colors.grey.shade200,
+                    child: Icon(Icons.image_not_supported),
+                  );
+                },
               )
             else
               Container(

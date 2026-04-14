@@ -44,6 +44,8 @@ dependencies:
   image_picker_web: ^4.0.0
   firebase_storage: ^11.7.0
   firebase_storage_web: ^3.9.0
+  firebase_auth: ^4.17.9
+  google_fonts: ^6.1.0
   envied: ^0.5.4+1
   build_runner: ^2.4.8
   firebase_core: ^2.24.2

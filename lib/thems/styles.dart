@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 //abstract class→継承されることを前提として、処理内容を記述しないメソッド（抽象メソッド）を含むクラス
 abstract class Styles {
@@ -34,6 +35,91 @@ abstract class Styles {
     backgroundColor: Styles.primaryColor,
     iconTheme: const IconThemeData(
       color: Styles.appBarTitleColor,
+    ),
+    titleTextStyle: GoogleFonts.mPlusRounded1c(
+      textStyle: const TextStyle(
+        color: Styles.appBarTitleColor,
+        fontSize: 25,
+      ),
+    ),
+  );
+  static const TextTheme textTheme = TextTheme(
+    displayLarge: TextStyle(
+      fontSize: 59,
+      height: 1.0,
+      fontStyle: FontStyle.normal,
+      fontWeight: FontWeight.w400,
+      color: Styles.commonTextColor,
+    ),
+    displaySmall: TextStyle(
+      fontSize: 24,
+      height: 1.48,
+      fontStyle: FontStyle.normal,
+      fontWeight: FontWeight.w700,
+      color: Styles.commonTextColor,
+    ),
+    headlineSmall: TextStyle(
+      fontSize: 17,
+      height: 1.48,
+      fontStyle: FontStyle.normal,
+      fontWeight: FontWeight.w700,
+      color: Styles.commonTextColor,
+    ),
+    titleLarge: TextStyle(
+      fontSize: 16,
+      height: 1.5,
+      fontStyle: FontStyle.normal,
+      fontWeight: FontWeight.w700,
+      color: Styles.commonTextColor,
+    ),
+    titleMedium: TextStyle(
+      fontSize: 14,
+      height: 1.48,
+      fontStyle: FontStyle.normal,
+      fontWeight: FontWeight.w700,
+      color: Styles.commonTextColor,
+    ),
+    bodyLarge: TextStyle(
+      fontSize: 14,
+      height: 1.57,
+      fontStyle: FontStyle.normal,
+      fontWeight: FontWeight.w400,
+      color: Styles.commonTextColor,
+    ),
+    bodyMedium: TextStyle(
+      fontSize: 12,
+      height: 1.44,
+      fontStyle: FontStyle.normal,
+      fontWeight: FontWeight.w400,
+      color: Styles.commonTextColor,
+    ),
+    titleSmall: TextStyle(
+      fontSize: 16,
+      height: 1.5,
+      fontStyle: FontStyle.normal,
+      fontWeight: FontWeight.w400,
+      color: Styles.commonTextColor,
+    ),
+    labelLarge: TextStyle(
+      fontSize: 16,
+      height: 1.13,
+      fontWeight: FontWeight.w700,
+      fontStyle: FontStyle.normal,
+      color: Styles.commonTextColor,
+    ),
+    bodySmall: TextStyle(
+      fontSize: 8,
+      height: 1.48,
+      fontWeight: FontWeight.w400,
+      fontStyle: FontStyle.normal,
+      color: Styles.commonTextColor,
+    ),
+    labelSmall: TextStyle(
+      fontSize: 9,
+      height: 1.48,
+      fontWeight: FontWeight.w700,
+      fontStyle: FontStyle.normal,
+      color: Styles.commonTextColor,
     ),
   );
 }
