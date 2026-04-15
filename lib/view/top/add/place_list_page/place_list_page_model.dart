@@ -23,8 +23,31 @@ class ShopListModel extends ChangeNotifier {
       final String situation = data['situation'] ?? '';
       final String timezone = data['timezone'] ?? '';
       final String seatforme = data['seatforme'] ?? '';
-      return Shop(id, title, imgURL, lat, long, electronic, ventilationFan,
-          masticatory, situation, timezone, seatforme);
+      final Map<String, dynamic>? rawSounds =
+          data['sounds'] is Map ? Map<String, dynamic>.from(data['sounds']) : null;
+      final Map<String, double>? sounds = rawSounds?.map((key, value) {
+        final num? numericValue = value as num?;
+        if (numericValue == null) {
+          return MapEntry(key, 0);
+        }
+        return MapEntry(key, numericValue.toDouble());
+      });
+      final String? source = data['source'];
+      return Shop(
+        id,
+        title,
+        imgURL,
+        lat,
+        long,
+        electronic,
+        ventilationFan,
+        masticatory,
+        situation,
+        timezone,
+        seatforme,
+        sounds,
+        source,
+      );
     }).toList();
 
     this.shops = shops;

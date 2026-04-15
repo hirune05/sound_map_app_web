@@ -11,6 +11,8 @@ class Shop {
     this.situation,
     this.timezone,
     this.seatforme,
+    this.sounds,
+    this.source,
   );
   String id;
   String title;
@@ -23,4 +25,6 @@ class Shop {
   String situation;
   String timezone;
   String seatforme;
+  Map<String, double>? sounds;
+  String? source;
 }

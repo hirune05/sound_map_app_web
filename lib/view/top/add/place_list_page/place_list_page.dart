@@ -49,16 +49,7 @@ class ShopListPage extends StatelessWidget {
             }
 
             final List<Widget> widgets = filteredShops
-                .map((shop) => buildListItem(
-                    shortestSide,
-                    shop.title,
-                    shop.imgURL,
-                    shop.electronic,
-                    shop.ventilationFan,
-                    shop.masticatory,
-                    shop.situation,
-                    shop.timezone,
-                    shop.seatforme))
+                .map((shop) => buildListItem(shortestSide, shop))
                 .toList();
             return ListView(
               children: widgets,
@@ -108,17 +99,8 @@ class ShopListPage extends StatelessWidget {
     );
   }
 
-  Widget buildListItem(
-    double shortestSide,
-    String title,
-    String? imgURL,
-    int electronic,
-    int ventilationFan,
-    int masticatory,
-    String situation,
-    String timezone,
-    String seatforme,
-  ) {
+  Widget buildListItem(double shortestSide, Shop shop) {
+    final bool hasSoundMap = shop.sounds != null && shop.sounds!.isNotEmpty;
     return GestureDetector(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -130,9 +112,9 @@ class ShopListPage extends StatelessWidget {
         ),
         child: Column(
           children: [
-            if (imgURL != null)
+            if (shop.imgURL != null)
               Image.network(
-                imgURL,
+                shop.imgURL!,
                 width: shortestSide / 2,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
@@ -155,13 +137,18 @@ class ShopListPage extends StatelessWidget {
             SizedBox(
               height: 12,
             ),
-            buildSeatDetail("Purpose", situation),
-            buildSeatDetail("Time of visit", timezone),
-            buildSeatDetail("Location", title),
-            buildSeatDetail("Seating", seatforme),
-            buildSoundDetail("Electronic sounds", electronic),
-            buildSoundDetail("Fan noise", ventilationFan),
-            buildSoundDetail("Chewing sound", masticatory),
+            if (hasSoundMap) ...[
+              buildSectionTitle('Recorded sounds'),
+              ...buildSoundMapDetails(shop.sounds!),
+            ] else ...[
+              buildSeatDetail("Purpose", shop.situation),
+              buildSeatDetail("Time of visit", shop.timezone),
+              buildSeatDetail("Location", shop.title),
+              buildSeatDetail("Seating", shop.seatforme),
+              buildSoundDetail("Electronic sounds", shop.electronic),
+              buildSoundDetail("Fan noise", shop.ventilationFan),
+              buildSoundDetail("Chewing sound", shop.masticatory),
+            ],
             SizedBox(
               height: 12,
             ),
@@ -194,6 +181,33 @@ class ShopListPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget buildSectionTitle(String title) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 8),
+      child: BlackText(title, 20),
+    );
+  }
+
+  List<Widget> buildSoundMapDetails(Map<String, double> sounds) {
+    final entries = sounds.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    return entries
+        .map(
+          (entry) => Container(
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                BlackText(entry.key, 18),
+                BlackText('${(entry.value * 100).toStringAsFixed(1)}%', 18),
+              ],
+            ),
+          ),
+        )
+        .toList();
   }
 
   Widget buildSeatDetail(String content, String content_d) {
