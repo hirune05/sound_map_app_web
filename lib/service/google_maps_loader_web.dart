@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:html' as html;
 
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:sound_map_app/env/env.dart';
 
 Future<void> ensureGoogleMapsInitialized() async {
-  final apiKey = await _loadMapsApiKey();
+  final apiKey = _loadMapsApiKey();
 
   final existing =
       html.document.querySelector('script[data-google-maps="true"]');
@@ -30,26 +30,10 @@ Future<void> ensureGoogleMapsInitialized() async {
   await completer.future;
 }
 
-Future<String> _loadMapsApiKey() async {
-  final content = await rootBundle.loadString('.env');
-  final lines = content.split(RegExp(r'\r?\n'));
-  for (final rawLine in lines) {
-    final line = rawLine.trim();
-    if (line.isEmpty || line.startsWith('#')) {
-      continue;
-    }
-    if (!line.startsWith('YOURAPIKEY=')) {
-      continue;
-    }
-    final parts = line.split('=');
-    var value = parts.length > 1 ? parts.sublist(1).join('=').trim() : '';
-    if (value.startsWith('"') && value.endsWith('"') && value.length >= 2) {
-      value = value.substring(1, value.length - 1);
-    }
-    if (value.isEmpty) {
-      break;
-    }
-    return value;
+String _loadMapsApiKey() {
+  final apiKey = Env.mapsApiKey.trim();
+  if (apiKey.isEmpty) {
+    throw 'YOURAPIKEY is not set. Add it to .env.';
   }
-  throw 'YOURAPIKEY is not set. Add it to .env.';
+  return apiKey;
 }

@@ -233,12 +233,12 @@ class _$_LoginState implements _LoginState {
 
 abstract class _LoginState implements LoginState {
   const factory _LoginState(
-      {String infoText,
-      String email,
-      String password,
-      String name,
-      bool isLoginMode,
-      User user}) = _$_LoginState;
+      {final String infoText,
+      final String email,
+      final String password,
+      final String name,
+      final bool isLoginMode,
+      final User user}) = _$_LoginState;
 
   @override
   String get infoText;

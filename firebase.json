@@ -1,1 +1,55 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"cocomakers-sound-classify-app","appId":"1:758692455460:android:6208e8327d4955c5b2a4b1","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"cocomakers-sound-classify-app","appId":"1:758692455460:ios:9d9561ec1573d77ab2a4b1","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"macos":{"default":{"projectId":"cocomakers-sound-classify-app","appId":"1:758692455460:ios:9d9561ec1573d77ab2a4b1","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"cocomakers-sound-classify-app","configurations":{"android":"1:758692455460:android:6208e8327d4955c5b2a4b1","ios":"1:758692455460:ios:9d9561ec1573d77ab2a4b1","macos":"1:758692455460:ios:9d9561ec1573d77ab2a4b1","web":"1:758692455460:web:cb4776e091014e7bb2a4b1","windows":"1:758692455460:web:0168aad5b494c7e7b2a4b1"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "cocomakers-sound-classify-app",
+          "appId": "1:758692455460:android:6208e8327d4955c5b2a4b1",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "cocomakers-sound-classify-app",
+          "appId": "1:758692455460:ios:9d9561ec1573d77ab2a4b1",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "cocomakers-sound-classify-app",
+          "appId": "1:758692455460:ios:9d9561ec1573d77ab2a4b1",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "cocomakers-sound-classify-app",
+          "configurations": {
+            "android": "1:758692455460:android:6208e8327d4955c5b2a4b1",
+            "ios": "1:758692455460:ios:9d9561ec1573d77ab2a4b1",
+            "macos": "1:758692455460:ios:9d9561ec1573d77ab2a4b1",
+            "web": "1:758692455460:web:cb4776e091014e7bb2a4b1",
+            "windows": "1:758692455460:web:0168aad5b494c7e7b2a4b1"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
