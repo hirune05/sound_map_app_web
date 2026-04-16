@@ -16,13 +16,15 @@ class TopPage extends ConsumerStatefulWidget {
 
 class _TopPageState extends ConsumerState<TopPage> {
   final Completer<GoogleMapController> _controller = Completer();
-  late final Future<Position> _positionFuture;
+  static const LatLng _fallbackPosition = LatLng(35.681236, 139.767125);
   ProviderSubscription<AsyncValue<List<PlaceModel>>>? _placesSubscription;
+  LatLng? _currentPosition;
+  String? _locationError;
 
   @override
   void initState() {
     super.initState();
-    _positionFuture = _getCurrentPosition();
+    _loadCurrentPosition();
     _placesSubscription = ref.listenManual<AsyncValue<List<PlaceModel>>>(
       placeModelProvider,
       (previous, next) {
@@ -37,6 +39,28 @@ class _TopPageState extends ConsumerState<TopPage> {
   void dispose() {
     _placesSubscription?.close();
     super.dispose();
+  }
+
+  Future<void> _loadCurrentPosition() async {
+    try {
+      final position = await _getCurrentPosition();
+      final currentPosition = LatLng(position.latitude, position.longitude);
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _currentPosition = currentPosition;
+        _locationError = null;
+      });
+      await _moveCamera(currentPosition);
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _locationError = error.toString();
+      });
+    }
   }
 
   Future<Position> _getCurrentPosition() async {
@@ -63,8 +87,21 @@ class _TopPageState extends ConsumerState<TopPage> {
     );
   }
 
+  Future<void> _moveCamera(LatLng target) async {
+    if (!_controller.isCompleted) {
+      return;
+    }
+    final controller = await _controller.future;
+    await controller.animateCamera(
+      CameraUpdate.newLatLng(target),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final placesAsync = ref.watch(placeModelProvider);
+    final initialPosition = _currentPosition ?? _fallbackPosition;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -72,71 +109,74 @@ class _TopPageState extends ConsumerState<TopPage> {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: FutureBuilder<Position>(
-        future: _positionFuture,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final position = snapshot.data!;
-            final initialPosition =
-                LatLng(position.latitude, position.longitude);
-            final placesAsync = ref.watch(placeModelProvider);
-            return SafeArea(
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: initialPosition,
-                      zoom: 14.4746,
+      body: SafeArea(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: initialPosition,
+                zoom: 14.4746,
+              ),
+              onMapCreated: (GoogleMapController controller) async {
+                if (!_controller.isCompleted) {
+                  _controller.complete(controller);
+                }
+                if (_currentPosition != null) {
+                  await controller.animateCamera(
+                    CameraUpdate.newLatLng(_currentPosition!),
+                  );
+                }
+              },
+              myLocationEnabled: true,
+              myLocationButtonEnabled: true,
+              mapToolbarEnabled: false,
+              buildingsEnabled: true,
+              onTap: (LatLng latLng) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShopListPage(
+                      lat: latLng.latitude,
+                      long: latLng.longitude,
+                      shoptitle: 'どこか',
                     ),
-                    onMapCreated: (GoogleMapController controller) async {
-                      _controller.complete(controller);
-                    },
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: true,
-                    mapToolbarEnabled: false,
-                    buildingsEnabled: true,
-                    onTap: (LatLng latLng) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ShopListPage(
-                            lat: latLng.latitude,
-                            long: latLng.longitude,
-                            shoptitle: 'どこか',
-                          ),
-                        ),
-                      );
-                      print(latLng);
-                    },
-                    markers: Set.from(ref.watch(markersProvider)),
                   ),
-                  placesAsync.when(
-                    loading: () => Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    error: (error, stackTrace) => Center(
-                      child: Text(
-                        error.toString(),
+                );
+              },
+              markers: Set.from(ref.watch(markersProvider)),
+            ),
+            if (placesAsync.isLoading || _currentPosition == null || _locationError != null)
+              Positioned(
+                left: 16,
+                right: 16,
+                top: 16,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.92),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.12),
+                        blurRadius: 12,
+                        offset: Offset(0, 4),
                       ),
-                    ),
-                    data: (_) => SizedBox.shrink(),
+                    ],
                   ),
-                ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(
+                      _locationError ??
+                          (placesAsync.isLoading
+                              ? '地図を準備中...'
+                              : '位置情報を取得中...'),
+                      style: TextStyle(color: Colors.black87),
+                    ),
+                  ),
+                ),
               ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                snapshot.error.toString(),
-              ),
-            );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
+          ],
+        ),
       ),
     );
   }
