@@ -33,7 +33,7 @@ Future<void> ensureGoogleMapsInitialized() async {
 String _loadMapsApiKey() {
   final apiKey = Env.mapsApiKey.trim();
   if (apiKey.isEmpty) {
-    throw 'YOURAPIKEY is not set. Add it to .env.';
+    throw 'YOURAPIKEY is not set. Pass it with --dart-define=YOURAPIKEY=...';
   }
   return apiKey;
 }
