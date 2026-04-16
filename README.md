@@ -6,6 +6,12 @@ https://cocomakers-sound-classify-app.web.app
 - Google Maps APIキー / `.env` / ローカル web 起動: `sound-map-web-setup`
 - Firebase Hosting / Storage / CORS: `sound-map-firebase-setup`
 
+## Skills を用いた対話型セットアップと実行
+> [!TIP]
+> Codex を使用している場合は、それぞれ以下コマンドで対話的にセットアップを実行できます。
+- コマンド `$sound-map-web-setup` : Google Maps APIキー / `.env` / ローカル web 起動
+- コマンド `$sound-map-firebase-setup`: Firebase Hosting / Storage / CORS
+
 ## Google Maps セットアップ
 1. `.env.example` をコピーして `.env` を作成
 2. `.env` の `YOURAPIKEY` にAPIキーを入れる
