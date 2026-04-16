@@ -20,14 +20,25 @@ cp .env.example .env
 - `.env` の `YOURAPIKEY` に API key を入れる
 - `lib/env/env.dart` は `String.fromEnvironment('YOURAPIKEY')` を読む
 
-## 3. ローカルビルド
+## 3. Storage の CORS を設定する
+
+- `cors.json` は Firebase Storage 用
+- バケットは `cocomakers-sound-classify-app.appspot.com`
+- 設定例:
+
+```bash
+gsutil cors set cors.json gs://cocomakers-sound-classify-app.appspot.com
+gsutil cors get gs://cocomakers-sound-classify-app.appspot.com
+```
+
+## 4. ローカルビルド
 
 ```bash
 flutter pub get
 flutter run -d chrome --dart-define-from-file=.env
 ```
 
-## 4. うまくいかない時
+## 5. うまくいかない時
 
 - 地図が白いときは console の `Google Maps JavaScript API` エラーを見る
 - API key を変えたら web を再ビルドする

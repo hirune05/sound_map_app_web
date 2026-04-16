@@ -1,7 +1,0 @@
-interface:
-  display_name: "Sound Map Firebase"
-  short_description: "Hosting, Storage CORS, deploy"
-  default_prompt: "Use $sound-map-firebase-setup to set up Firebase Hosting, Storage CORS, and deploy steps for sound_map_app_web."
-
-policy:
-  allow_implicit_invocation: true

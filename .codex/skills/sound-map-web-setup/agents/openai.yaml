@@ -1,7 +1,7 @@
 interface:
   display_name: "Sound Map Web Setup"
-  short_description: "Maps API key, .env, web build"
-  default_prompt: "Use $sound-map-web-setup to set up the Google Maps API key, .env, and local web build for sound_map_app_web."
+  short_description: "Maps API key, .env, CORS, web build"
+  default_prompt: "Use $sound-map-web-setup to set up the Google Maps API key, .env, Firebase Storage CORS, and local web build for sound_map_app_web."
 
 policy:
   allow_implicit_invocation: true
