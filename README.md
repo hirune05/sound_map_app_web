@@ -2,8 +2,11 @@
 https://cocomakers-sound-classify-app.web.app
 (※ スマホのwebでは地図が表示されないことがあります。ご了承ください。)
 
-## 実行方法
-Google Maps APIキーは `.env` に入れて `--dart-define-from-file` で渡します。
+## 使う skill
+- Google Maps APIキー / `.env` / ローカル web 起動: `sound-map-web-setup`
+- Firebase Hosting / Storage / CORS: `sound-map-firebase-setup`
+
+## Google Maps セットアップ
 1. `.env.example` をコピーして `.env` を作成
 2. `.env` の `YOURAPIKEY` にAPIキーを入れる
 3. 起動
@@ -11,7 +14,8 @@ Google Maps APIキーは `.env` に入れて `--dart-define-from-file` で渡し
 flutter run -d chrome --dart-define-from-file=.env
 ```
 
-Firebase Hosting にデプロイする場合も同じ `--dart-define` を付けてビルドします。
+## Firebase セットアップ
+Firebase 側の設定が必要なら `sound-map-firebase-setup` を使ってください。
 ```
 flutter build web --release --dart-define-from-file=.env
 firebase deploy --only hosting
