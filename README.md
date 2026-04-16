@@ -2,9 +2,6 @@
 https://cocomakers-sound-classify-app.web.app
 (※ スマホのwebでは地図が表示されないことがあります。ご了承ください。)
 
-## 使う skill
-- Google Maps APIキー / `.env` / CORS / ローカル web 起動: `sound-map-web-setup`
-
 ## Skills を用いた対話型セットアップと実行
 > [!TIP]
 > Codex を使用している場合は、'$sound-map-web-setup' コマンドで対話的にセットアップを実行できます。
