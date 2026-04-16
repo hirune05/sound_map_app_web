@@ -7,7 +7,7 @@ https://cocomakers-sound-classify-app.web.app
 
 ## Skills を用いた対話型セットアップと実行
 > [!TIP]
-> Codex を使用している場合は、'$sound-map-web-setup' コマンドで対話的にセットアップを実行できます。（iOSのみ対応）
+> Codex を使用している場合は、'$sound-map-web-setup' コマンドで対話的にセットアップを実行できます。
 
 ## Google Maps セットアップ
 1. GCP で Google Maps API キーを作る
