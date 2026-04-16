@@ -1,3 +1,7 @@
+## アプリのリンク
+https://cocomakers-sound-classify-app.web.app
+(※ スマホのwebでは地図が表示されないことがあります。ご了承ください。)
+
 ## 実行方法
 Google Maps APIキーは `.env` に入れて `--dart-define-from-file` で渡します。
 1. `.env.example` をコピーして `.env` を作成
