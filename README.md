@@ -4,7 +4,11 @@ https://cocomakers-sound-classify-app.web.app
 
 ## Skills を用いた対話型セットアップと実行
 > [!TIP]
-> Codex を使用している場合は、'$sound-map-web-setup' コマンドで対話的にセットアップを実行できます。
+> Codex または Claude Code を使用している場合は、以下コマンドで対話的にセットアップを実行できます。
+> 
+> Cocex: `$sound-map-web-setup`
+> 
+> Claude Code: `/sound-map-web-setup`
 
 ## Google Maps セットアップ
 1. GCP で Google Maps API キーを作る
